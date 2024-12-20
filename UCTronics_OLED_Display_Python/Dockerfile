@@ -1,4 +1,5 @@
 ARG BUILD_FROM
+ARG BUILD_ARCH
 #tianon/raspbian:${VERSION}-slim
 
 FROM ${BUILD_FROM}
@@ -18,13 +19,12 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG \
     BASHIO_VERSION \
     TEMPIO_VERSION \
-    S6_OVERLAY_VERSION \
-    ARCH
+    S6_OVERLAY_VERSION
 
 # Base system
 WORKDIR /usr/src
 
-RUN apt-get update && apt-get install -y \
+RUN set -x && apt-get update && apt-get install -y \
     gcc \
     procps \
     bash \
@@ -39,37 +39,30 @@ RUN apt-get update && apt-get install -y \
     python3-rpi.gpio \
     libjpeg-dev \
     libfreetype6-dev \
-    libopenjp2-7
+    libopenjp2-7 \
+    xz-utils
 
-RUN curl -L -f -s "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz" | tar zxvf - -C /
+RUN set -x && wget -O- "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${BUILD_ARCH}.tar.xz" | tar Jxvf - -C / && \
+    mkdir -p /etc/fix-attrs.d && \
+    mkdir -p /etc/services.d
 
-RUN mkdir -p /etc/fix-attrs.d
+RUN set -x && wget -O /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_${BUILD_ARCH}" && \
+    chmod a+x /usr/bin/tempio && \
+    mkdir -p /usr/src/bashio
 
-RUN mkdir -p /etc/services.d
+RUN set -x && wget -O- "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz" | tar -xzf - --strip 1 -C /usr/src/bashio && \
+    mv /usr/src/bashio/lib /usr/lib/bashio && \
+    ln -s /usr/lib/bashio/bashio /usr/bin/bashio
 
-RUN curl -L -f -s -o /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_${ARCH}"
-
-RUN chmod a+x /usr/bin/tempio
-
-RUN mkdir -p /usr/src/bashio
-
-RUN curl -L -f -s "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz" | tar -xzf - --strip 1 -C /usr/src/bashio
-
-RUN mv /usr/src/bashio/lib /usr/lib/bashio
-
-RUN ln -s /usr/lib/bashio/bashio /usr/bin/bashio
-
-RUN rm -rf /var/lib/apt/lists/*
-
-RUN rm -rf /usr/src/* 
+RUN rm -rf /var/lib/apt/lists/* /usr/src/*
 
 # Install Pythong Libs for this Add-on
-RUN pip3 install requests
-RUN pip3 install gpiozero
-RUN pip3 install adafruit-blinka
-RUN pip3 install adafruit-circuitpython-ssd1306
-RUN pip3 install pillow
-RUN pip3 install websocket-client
+RUN set -x && pip3 install requests \
+    gpiozero \
+    adafruit-blinka \
+    adafruit-circuitpython-ssd1306 \
+    pillow \
+    websocket-client
 
 COPY /python* /UCTronics_OLED/
 
