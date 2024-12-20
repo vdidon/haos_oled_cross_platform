@@ -1,5 +1,5 @@
 {
-    "name": "Home Assistant Add-ons:",
-    "url": "https://github.com/UCTRONICS/HomeAssistant",
-    "maintainer": "UCTRONICS <support@uctronics.com>"
+    "name": "Oled display ssd1306 cross platform",
+    "url": "https://github.com/vdidon/haos_oled_cross_platform",
+    "maintainer": "vdidon <vdidon@live.fr>"
 }

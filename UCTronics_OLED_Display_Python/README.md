@@ -1,3 +1,5 @@
+**Only tested on Raspberry Pi 5**
+
 # UCTRONICS OLED Display - Python Version
 
 Enables the the OLED display for UCTRONICS Pi 4 Rack Module.

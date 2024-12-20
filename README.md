@@ -1,3 +1,5 @@
+**Only tested on Raspberry Pi 5**
+
 
 # Home Assistant Add-ons
 
