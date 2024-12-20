@@ -41,17 +41,17 @@ RUN set -x && apt-get update && apt-get install -y \
     libopenjp2-7 \
     xz-utils
 
-RUN wget "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz"
-RUN tar Jxvf s6-overlay-aarch64.tar.xz -C /
-RUN mkdir -p /etc/fix-attrs.d
-RUN mkdir -p /etc/services.d
+RUN wget "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz" && \
+    tar Jxvf s6-overlay-aarch64.tar.xz -C / && \
+    mkdir -p /etc/fix-attrs.d /etc/services.d
 
-RUN set -x && wget -O /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_aarch64" && \
+RUN wget -O /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_aarch64" && \
     chmod a+x /usr/bin/tempio && \
     mkdir -p /usr/src/bashio
 
-RUN set -x && wget -O- "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz" | tar -xzf - --strip 1 -C /usr/src/bashio && \
-    mv /usr/src/bashio/lib /usr/lib/bashio && \
+RUN wget "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz" && \
+    tar -xzf v${BASHIO_VERSION}.tar.gz && \
+    mv bashio-${BASHIO_VERSION}/lib /usr/lib/bashio && \
     ln -s /usr/lib/bashio/bashio /usr/bin/bashio
 
 RUN rm -rf /var/lib/apt/lists/* /usr/src/*
