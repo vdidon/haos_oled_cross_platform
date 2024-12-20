@@ -14,11 +14,12 @@ ENV \
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Version
+# Version et Architecture
 ARG \
     BASHIO_VERSION \
     TEMPIO_VERSION \
-    S6_OVERLAY_VERSION
+    S6_OVERLAY_VERSION \
+    ARCH
 
 # Base system
 WORKDIR /usr/src
@@ -40,13 +41,13 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libopenjp2-7
 
-RUN curl -L -f -s "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-armhf.tar.gz" | tar zxvf - -C /
+RUN curl -L -f -s "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz" | tar zxvf - -C /
 
 RUN mkdir -p /etc/fix-attrs.d
 
 RUN mkdir -p /etc/services.d
 
-RUN curl -L -f -s -o /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_armhf"
+RUN curl -L -f -s -o /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_${ARCH}"
 
 RUN chmod a+x /usr/bin/tempio
 
