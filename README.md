@@ -1,5 +1,5 @@
 **Only tested on Raspberry Pi 5**
-
+**Some problems, not ready to works on x86**
 
 # Home Assistant Add-ons
 

@@ -1,6 +1,4 @@
 ARG BUILD_FROM
-ARG BUILD_ARCH
-#tianon/raspbian:${VERSION}-slim
 
 FROM ${BUILD_FROM}
 
@@ -42,11 +40,11 @@ RUN set -x && apt-get update && apt-get install -y \
     libopenjp2-7 \
     xz-utils
 
-RUN set -x && wget -O- "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${BUILD_ARCH}.tar.xz" | tar Jxvf - -C / && \
+RUN set -x && wget -O- "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz" | tar Jxvf - -C / && \
     mkdir -p /etc/fix-attrs.d && \
     mkdir -p /etc/services.d
 
-RUN set -x && wget -O /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_${BUILD_ARCH}" && \
+RUN set -x && wget -O /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_aarch64" && \
     chmod a+x /usr/bin/tempio && \
     mkdir -p /usr/src/bashio
 
