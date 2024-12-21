@@ -39,7 +39,9 @@ RUN set -x && apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     libopenjp2-7 \
-    xz-utils
+    xz-utils \
+    build-essential \
+    python3-setuptools
 
 RUN wget "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz" && \
     tar Jxvf s6-overlay-aarch64.tar.xz -C / && \
@@ -50,21 +52,22 @@ RUN wget -O /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/d
     mkdir -p /usr/src/bashio
 
 
-RUN mkdir -p /usr/src/bashio
-RUN wget "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz"
-RUN tar -xzf v${BASHIO_VERSION}.tar.gz -C /usr/src/bashio --strip-components=1
-RUN mv /usr/src/bashio/lib /usr/bin
+RUN mkdir -p /usr/src/bashio && \
+    wget "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz" && \
+    tar -xzf v${BASHIO_VERSION}.tar.gz -C /usr/src/bashio --strip-components=1 && \
+    mv /usr/src/bashio/lib /usr/bin
 
 RUN rm -rf /var/lib/apt/lists/* /usr/src/*
 
 # Install Pythong Libs for this Add-on
-RUN pip3 install requests
-RUN pip3 install gpiozero
-RUN pip3 install adafruit-blinka
-RUN pip3 install adafruit-circuitpython-ssd1306
-RUN pip3 install pillow
-RUN pip3 install websocket-client
-# RUN pip3 install requests gpiozero adafruit-blinka adafruit-circuitpython-ssd1306 pillow websocket-client
+RUN python3 -m pip install --break-system-packages --upgrade pip
+RUN python3 -m pip install --break-system-packages --no-cache-dir \
+    requests \
+    gpiozero \
+    adafruit-blinka \
+    adafruit-circuitpython-ssd1306 \
+    pillow \
+    websocket-client
 
 COPY /python* /UCTronics_OLED/
 
