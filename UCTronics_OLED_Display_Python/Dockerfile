@@ -75,5 +75,5 @@ COPY /python* /UCTronics_OLED/
 COPY start.sh /
 WORKDIR /data
 RUN chmod a+x /start.sh
-ENTRYPOINT ["/init"]
+ENTRYPOINT ["/start.sh"]
 CMD ["/start.sh"]
