@@ -50,27 +50,21 @@ RUN wget -O /usr/bin/tempio "https://github.com/home-assistant/tempio/releases/d
     mkdir -p /usr/src/bashio
 
 
-    # && mkdir -p /usr/src/bashio \
-    # && curl -L -f -s "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz" \
-    # | tar -xzf - --strip 1 -C /usr/src/bashio \
-    # && mv /usr/src/bashio/lib /usr/lib/bashio \
-    # && ln -s /usr/lib/bashio/bashio /usr/bin/bashio \
 RUN mkdir -p /usr/src/bashio
 RUN wget "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz"
 RUN tar -xzf v${BASHIO_VERSION}.tar.gz -C /usr/src/bashio --strip-components=1
-# RUN mv /usr/src/bashio/lib /usr/lib/bashio
-# RUN ln -s /usr/lib/bashio/bashio /usr/bin/bashio
 RUN mv /usr/src/bashio/lib /usr/bin
 
 RUN rm -rf /var/lib/apt/lists/* /usr/src/*
 
 # Install Pythong Libs for this Add-on
-RUN set -x && pip3 install requests \
-    gpiozero \
-    adafruit-blinka \
-    adafruit-circuitpython-ssd1306 \
-    pillow \
-    websocket-client
+RUN pip3 install requests
+RUN pip3 install gpiozero
+RUN pip3 install adafruit-blinka
+RUN pip3 install adafruit-circuitpython-ssd1306
+RUN pip3 install pillow
+RUN pip3 install websocket-client
+# RUN pip3 install requests gpiozero adafruit-blinka adafruit-circuitpython-ssd1306 pillow websocket-client
 
 COPY /python* /UCTronics_OLED/
 
